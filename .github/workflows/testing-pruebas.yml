@@ -1,0 +1,44 @@
+name: Pipeline de Pruebas
+
+# Define cuándo se ejecutará el workflow
+on:
+  push:
+    branches: [ develop, feature/** ] # Ejecutar en push a develop y ramas de características
+  pull_request:
+    branches: [ develop ] # Y en pull requests a develop
+
+# Define los jobs
+jobs:
+  test:
+    # Define el sistema operativo del runner
+    runs-on: ubuntu-latest
+
+    # Pasos a ejecutar
+    steps:
+    # Paso 1: Checkout del código
+    - uses: actions/checkout@v2
+    
+    # Paso 2: Configura Node.js
+    - name: Configurar Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14' # Especifica la versión de Node.js
+
+    # Paso 3: Instalar dependencias
+    - name: Instalar dependencias
+      run: npm install
+
+    # Paso 4: Ejecutar pruebas
+    - name: Ejecutar pruebas
+      run: npm test
+
+    # Paso 5: Verificar cobertura de código
+    - name: Verificar cobertura de código
+      run: |
+        COVERAGE_THRESHOLD=40
+        COVERAGE=$(npx nyc report --reporter=text-summary | grep 'Lines' | awk '{print $2}' | sed 's/%//')
+        echo "Cobertura de código: $COVERAGE%"
+        if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
+          echo "La cobertura de pruebas ($COVERAGE%) es menor al umbral requerido del $COVERAGE_THRESHOLD%"
+          exit 1
+        fi

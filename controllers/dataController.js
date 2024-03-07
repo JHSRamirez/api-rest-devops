@@ -14,7 +14,7 @@ exports.getAllDataTrx = async (req, res) => {
       const result = await client.query('SELECT * FROM transaccion');
       const data = result.rows;
       client.release();
-      res.json(data);
+      res.status(200).json(data);
     } catch (err) {
       console.error('Error al obtener datos:', err);
       res.status(500).send('Error interno del servidor');
@@ -28,7 +28,7 @@ exports.getAllDataTrx = async (req, res) => {
       const result = await client.query('SELECT * FROM cliente');
       const data = result.rows;
       client.release();
-      res.json(data);
+      res.status(200).json(data);
     } catch (err) {
       console.error('Error al obtener datos:', err);
       res.status(500).send('Error interno del servidor');
@@ -44,7 +44,7 @@ exports.getAllDataTrx = async (req, res) => {
       const result = await client.query('SELECT * FROM producto');
       const data = result.rows;
       client.release();
-      res.json(data);
+      res.status(200).json(data);
     } catch (err) {
       console.error('Error al obtener datos:', err);
       res.status(500).send('Error interno del servidor');
@@ -62,7 +62,7 @@ exports.createDataTrx = async (req, res) => {
       const result = await client.query('INSERT INTO transaccion (cliente_id, producto_id, cantidad) VALUES ($1, $2, $3) RETURNING *', [ cliente_id, producto_id ,cantidad]);
       const newData = result.rows[0];
       client.release();
-      res.json(newData);
+      res.status(200).json(newData);
     } catch (err) {
       console.error('Error al crear un nuevo registro:', err);
       res.status(500).send('Error interno del servidor');
@@ -104,7 +104,7 @@ exports.createDataTrx = async (req, res) => {
       if (!deletedData) {
         return res.status(404).send('Registro no encontrado');
       }
-      res.json(deletedData);
+      res.status(200).json(deletedData);
     } catch (err) {
       console.error('Error al eliminar el registro:', err);
       res.status(500).send('Error interno del servidor');
