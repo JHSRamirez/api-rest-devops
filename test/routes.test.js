@@ -1,6 +1,6 @@
 const request = require('supertest');
 const express = require('express');
-const userRoutes = require('./dataRoutes');
+const userRoutes = require('../routes/dataRoutes');
 
 const app = express();
 app.use(express.json()); // Para soportar JSON-encoded bodies
