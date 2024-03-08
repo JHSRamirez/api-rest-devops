@@ -70,6 +70,22 @@ exports.createDataTrx = async (req, res) => {
   };
 
 
+
+
+  exports.createDataClients = async (req, res) => {
+    const { id, nombre ,apellido,correo,telefono} = req.body;
+    try {
+      const client = await pool.connect();
+      const result = await client.query('INSERT INTO cliente (id, nombre, apellido,correo,telefono) VALUES ($1, $2, $3, $4, $5) RETURNING *', [id, nombre ,apellido,correo,telefono]);
+      const newData = result.rows[0];
+      client.release();
+      res.status(200).json(newData);
+    } catch (err) {
+      console.error('Error al crear un nuevo registro:', err);
+      res.status(500).send('Error interno del servidor');
+    }
+  };
+
   //-------------------------------------
 
 
@@ -84,7 +100,7 @@ exports.createDataTrx = async (req, res) => {
       if (!updatedData) {
         return res.status(404).send('Registro no encontrado');
       }
-      res.json(updatedData);
+      res.status(200).json(updatedData);
     } catch (err) {
       console.error('Error al actualizar el registro:', err);
       res.status(500).send('Error interno del servidor');
