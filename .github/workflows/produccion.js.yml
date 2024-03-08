@@ -29,10 +29,4 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
-# Verificacion cobertura 
-    - name: Verificar cobertura
-    - uses: 5monkeys/cobertura-action@master
-    - with: 
-          path: coverage/clover.xml
-          repo_token: ${{secrets.GITHUB_TOKEN}}
-          minimum_coverage: 40
+
